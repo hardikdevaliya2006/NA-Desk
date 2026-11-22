@@ -13,7 +13,7 @@ import { COLOR_PRESETS } from "./colors";
 import { useColor } from "./ColorProvider";
 
 export function ColorPicker() {
-  const { color, palette, setColor } = useColor();
+  const { color, setColor } = useColor();
   const availableColors = COLOR_PRESETS.filter(
     (preset) => preset.id !== color,
   );
@@ -25,16 +25,11 @@ export function ColorPicker() {
           <Button
             variant="outline"
             size="icon"
-            className="relative"
             aria-label="Change accent color"
           />
         }
       >
         <Palette className="h-[1.2rem] w-[1.2rem]" />
-        <span
-          className="absolute right-0.5 bottom-0.5 size-2 rounded-full ring-1 ring-background"
-          style={{ backgroundColor: palette.swatch }}
-        />
         <span className="sr-only">Change accent color</span>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">

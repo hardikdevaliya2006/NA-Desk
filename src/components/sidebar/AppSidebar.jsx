@@ -1,32 +1,17 @@
-import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  BookOpen,
-  ChartNoAxesCombined,
-  ChevronRight,
   ChevronsUpDown,
-  CircleHelp,
-  Ellipsis,
+  LayoutDashboard,
   LayoutGrid,
   LogOut,
-  Palette,
-  Plane,
-  Play,
-  Send,
-  Settings2,
-  Bot,
 } from "lucide-react";
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
-import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -38,81 +23,43 @@ import {
   SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarMenuSub,
-  SidebarMenuSubButton,
-  SidebarMenuSubItem,
-  SidebarRail,
 } from "@/components/ui/sidebar";
-import { logout } from "@/store/features/auth/reducers/authSlice.reducer";
-
-const playgroundPages = ["History", "Starred", "Settings"];
-
-const platformItems = [
-  { title: "Models", icon: Bot, chevron: true },
-  { title: "Documentation", icon: BookOpen, chevron: true },
-  { title: "Settings", icon: Settings2, chevron: true },
-];
-
-const projectItems = [
-  { title: "Design Engineering", icon: Palette },
-  { title: "Sales & Marketing", icon: ChartNoAxesCombined },
-  { title: "Travel", icon: Plane },
-  { title: "More", icon: Ellipsis },
-];
-
-const footerItems = [
-  { title: "Support", icon: CircleHelp },
-  { title: "Feedback", icon: Send },
-];
-
-function SimpleNavGroup({ label, items }) {
-  return (
-    <SidebarGroup>
-      <SidebarGroupLabel>{label}</SidebarGroupLabel>
-      <SidebarGroupContent>
-        <SidebarMenu>
-          {items.map((item) => (
-            <SidebarMenuItem key={item.title}>
-              <SidebarMenuButton tooltip={item.title} render={<Link to="/dashboard" />}>
-                <item.icon />
-                <span>{item.title}</span>
-                {item.chevron && (
-                  <ChevronRight className="ml-auto text-sidebar-foreground/60 group-data-[collapsible=icon]:hidden" />
-                )}
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          ))}
-        </SidebarMenu>
-      </SidebarGroupContent>
-    </SidebarGroup>
-  );
-}
+import authActions from "@/store/features/auth/actions/auth.actions";
 
 export function AppSidebar(props) {
   const { pathname } = useLocation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const user = useSelector((state) => state.authentication?.user);
+  const { user, name, role } = useSelector(
+    (state) => state.authentication ?? {},
+  );
 
-  const [playgroundOpen, setPlaygroundOpen] = useState(true);
-
+  // Prefer the name saved in the roles table, then the auth provider metadata,
+  // and only fall back to the email prefix as a last resort.
   const email = user?.email || "admin@example.com";
   const displayName =
-    user?.user_metadata?.full_name || user?.name || email.split("@")[0];
+    name ||
+    user?.user_metadata?.full_name ||
+    user?.user_metadata?.name ||
+    user?.name ||
+    email.split("@")[0];
   const initials = displayName
     .split(" ")
+    .filter(Boolean)
     .map((word) => word[0])
     .join("")
     .slice(0, 2)
     .toUpperCase();
+  const roleLabel = role
+    ? role.charAt(0).toUpperCase() + role.slice(1)
+    : null;
 
   const handleSignOut = () => {
-    dispatch(logout());
+    dispatch(authActions.logoutUser());
     navigate("/");
   };
 
@@ -124,78 +71,33 @@ export function AppSidebar(props) {
             <LayoutGrid className="size-4" />
           </div>
           <div className="flex flex-col leading-tight">
-            <span className="text-sm font-semibold tracking-tight">NA Desk</span>
-            <span className="text-xs text-muted-foreground">Enterprise</span>
+            <span className="text-sm font-semibold tracking-tight">ORG NAME</span>
+            <span className="text-xs text-muted-foreground">NA Desk</span>
           </div>
         </div>
       </SidebarHeader>
 
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Platform</SidebarGroupLabel>
           <SidebarGroupContent>
-            <Collapsible open={playgroundOpen} onOpenChange={setPlaygroundOpen}>
-              <SidebarMenu>
-                <SidebarMenuItem>
-                  <CollapsibleTrigger
-                    render={
-                      <SidebarMenuButton
-                        tooltip="Playground"
-                        isActive={pathname === "/dashboard"}
-                      >
-                        <Play />
-                        <span>Playground</span>
-                        <ChevronRight
-                          className={`ml-auto transition-transform duration-200 group-data-[collapsible=icon]:hidden ${
-                            playgroundOpen ? "rotate-90" : ""
-                          }`}
-                        />
-                      </SidebarMenuButton>
-                    }
-                  />
-                  <CollapsibleContent>
-                    <SidebarMenuSub>
-                      {playgroundPages.map((page) => (
-                        <SidebarMenuSubItem key={page}>
-                          <SidebarMenuSubButton render={<Link to="/dashboard" />}>
-                            <span>{page}</span>
-                          </SidebarMenuSubButton>
-                        </SidebarMenuSubItem>
-                      ))}
-                    </SidebarMenuSub>
-                  </CollapsibleContent>
-                </SidebarMenuItem>
-              </SidebarMenu>
-            </Collapsible>
-
-            <SidebarMenu className="mt-1">
-              {platformItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton tooltip={item.title} render={<Link to="/dashboard" />}>
-                    <item.icon />
-                    <span>{item.title}</span>
-                    <ChevronRight className="ml-auto text-sidebar-foreground/60 group-data-[collapsible=icon]:hidden" />
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  tooltip="Dashboard"
+                  isActive={pathname === "/dashboard"}
+                  render={<Link to="/dashboard" />}
+                >
+                  <LayoutDashboard />
+                  <span>Dashboard</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
-
-        <SimpleNavGroup label="Projects" items={projectItems} />
       </SidebarContent>
 
       <SidebarFooter>
         <SidebarMenu>
-          {footerItems.map((item) => (
-            <SidebarMenuItem key={item.title}>
-              <SidebarMenuButton tooltip={item.title} render={<Link to="/dashboard" />}>
-                <item.icon />
-                <span>{item.title}</span>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          ))}
-
           <SidebarMenuItem>
             <DropdownMenu>
               <DropdownMenuTrigger
@@ -203,47 +105,57 @@ export function AppSidebar(props) {
                   <SidebarMenuButton
                     size="lg"
                     tooltip="Account"
-                    className="data-open:bg-sidebar-accent data-open:text-sidebar-accent-foreground"
+                    aria-label="Open account menu"
+                    className="border border-primary/20 bg-primary/10 text-primary hover:bg-primary/15 data-open:bg-primary/15"
                   >
                     <Avatar className="size-8 rounded-lg">
-                      <AvatarFallback className="rounded-lg bg-primary/15 text-xs text-primary">
+                      <AvatarFallback className="rounded-lg bg-primary text-xs font-semibold text-primary-foreground">
                         {initials}
                       </AvatarFallback>
                     </Avatar>
                     <div className="grid min-w-0 flex-1 text-left text-xs leading-tight group-data-[collapsible=icon]:hidden">
                       <span className="truncate font-semibold">{displayName}</span>
-                      <span className="truncate text-muted-foreground">{email}</span>
+                      <span className="truncate text-primary/70">{email}</span>
                     </div>
-                    <ChevronsUpDown className="ml-auto size-4 shrink-0 opacity-60 group-data-[collapsible=icon]:hidden" />
+                    <ChevronsUpDown className="ml-auto size-4 shrink-0 opacity-70 group-data-[collapsible=icon]:hidden" />
                   </SidebarMenuButton>
                 }
               />
-              <DropdownMenuContent side="top" align="start" className="min-w-56">
-                <DropdownMenuLabel className="p-0 font-normal">
-                  <div className="flex items-center gap-2 px-2 py-1.5 text-left">
-                    <Avatar className="size-8 rounded-lg">
-                      <AvatarFallback className="rounded-lg bg-primary/15 text-xs text-primary">
-                        {initials}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="grid min-w-0 flex-1 text-left text-xs leading-tight">
-                      <span className="truncate font-semibold">{displayName}</span>
-                      <span className="truncate text-muted-foreground">{email}</span>
+              <DropdownMenuContent
+                side="right"
+                align="start"
+                sideOffset={8}
+                className="min-w-56"
+              >
+                <DropdownMenuGroup>
+                  <DropdownMenuLabel className="p-0 font-normal">
+                    <div className="flex items-center gap-2 px-2 py-1.5 text-left">
+                      <Avatar className="size-8 rounded-lg">
+                        <AvatarFallback className="rounded-lg bg-primary text-xs font-semibold text-primary-foreground">
+                          {initials}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="grid min-w-0 flex-1 text-left text-xs leading-tight">
+                        <span className="truncate font-semibold">{displayName}</span>
+                        {roleLabel && (
+                          <span className="mt-0.5 w-fit rounded bg-primary/10 px-1.5 py-px text-[10px] font-medium text-primary">
+                            {roleLabel}
+                          </span>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                </DropdownMenuLabel>
+                  </DropdownMenuLabel>
+                </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleSignOut}>
                   <LogOut />
-                  Sign out
+                  Log out
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>
-
-      <SidebarRail />
     </Sidebar>
   );
 }

@@ -8,8 +8,17 @@ const App = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(authActions.checkAuth());
-    dispatch(authActions.getUserRole());
+    const initializeAuth = async () => {
+      const result = await dispatch(authActions.checkAuth());
+
+      // Only fetch the role once we know a real session exists. Otherwise
+      // getUserRole() rejects with "User not authenticated" on the login page.
+      if (authActions.checkAuth.fulfilled.match(result) && result.payload) {
+        dispatch(authActions.getUserRole());
+      }
+    };
+
+    initializeAuth();
   }, [dispatch]);
 
   return (
