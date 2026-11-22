@@ -1,0 +1,22 @@
+# Frontend
+node_modules
+dist
+.env
+
+# Logs
+*.log
+
+# Editors
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Coverage
+coverage/
+
+.agents
+graphify-out
+
