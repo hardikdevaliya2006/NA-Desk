@@ -6,7 +6,12 @@ import { Eye, EyeOff } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
+import {
+  Field,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import authActions from "@/store/features/auth/actions/auth.actions";
@@ -16,16 +21,19 @@ export function LoginForm({ className, ...props }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const status = useSelector((state) => state.authentication.status);
+  const error = useSelector((state) => state.authentication.error);
 
   const [values, setValues] = useState({ email: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
 
   const isSubmitting = status === "loading";
+  const errorMessage =
+    typeof error === "string" ? error : error ? "Login failed" : null;
 
   const handleChange = (event) => {
     const { id, value } = event.target;
     setValues((current) => ({ ...current, [id]: value }));
-    dispatch(clearError());
+    if (errorMessage) dispatch(clearError());
   };
 
   const handleSubmit = async (event) => {
@@ -74,7 +82,7 @@ export function LoginForm({ className, ...props }) {
                     type={showPassword ? "text" : "password"}
                     placeholder="Enter your password"
                     autoComplete="current-password"
-                    className="pr-16"
+                    className="pr-10"
                     required
                     value={values.password}
                     onChange={handleChange}
@@ -92,10 +100,11 @@ export function LoginForm({ className, ...props }) {
                     ) : (
                       <Eye className="size-4" />
                     )}
-                    {showPassword ? "Hide" : "Show"}
                   </button>
                 </div>
               </Field>
+
+              {errorMessage && <FieldError>{errorMessage}</FieldError>}
 
               <Field>
                 <Button type="submit" disabled={isSubmitting}>
@@ -110,7 +119,7 @@ export function LoginForm({ className, ...props }) {
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,color-mix(in_oklch,var(--primary)_35%,transparent),transparent_55%),radial-gradient(circle_at_80%_80%,color-mix(in_oklch,var(--accent)_60%,transparent),transparent_55%)]" />
             <div className="absolute inset-0 opacity-40 [background-image:linear-gradient(to_right,color-mix(in_oklch,var(--foreground)_10%,transparent)_1px,transparent_1px),linear-gradient(to_bottom,color-mix(in_oklch,var(--foreground)_10%,transparent)_1px,transparent_1px)] [background-size:32px_32px]" />
             <div className="relative flex h-full items-center justify-center p-10">
-              <div className="rounded-2xl border bg-card/80 p-8 text-center shadow-lg backdrop-blur-sm">
+              <div className="rounded-2xl border bg-card/80 p-8 text-center backdrop-blur-sm">
                 <p className="text-xs font-semibold tracking-widest text-primary uppercase">
                   NA Desk
                 </p>

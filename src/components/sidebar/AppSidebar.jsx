@@ -2,9 +2,11 @@ import { Link, useLocation, useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import {
   ChevronsUpDown,
+  ExternalLink,
   LayoutDashboard,
   LayoutGrid,
   LogOut,
+  Users,
 } from "lucide-react";
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -63,32 +65,55 @@ export function AppSidebar(props) {
     navigate("/");
   };
 
+  const handleOpenPdWork = () => {
+    window.open("https://jbchauhanwork.vercel.app", "_blank", "noopener,noreferrer");
+  };
+
+  const navItemClass =
+    "h-9 gap-2.5 rounded-lg px-2.5 text-[13px] font-medium";
+
   return (
     <Sidebar {...props}>
-      <SidebarHeader>
-        <div className="flex items-center gap-2 px-2 py-1">
-          <div className="flex size-8 items-center justify-center rounded-md bg-primary text-primary-foreground">
-            <LayoutGrid className="size-4" />
+      <SidebarHeader className="gap-0 px-3 py-4">
+        <div className="flex items-center gap-2.5">
+          <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-sm">
+            <LayoutGrid className="size-[18px]" />
           </div>
-          <div className="flex flex-col leading-tight">
-            <span className="text-sm font-semibold tracking-tight">ORG NAME</span>
-            <span className="text-xs text-muted-foreground">NA Desk</span>
+          <div className="grid min-w-0 flex-1 leading-tight">
+            <span className="truncate text-sm font-semibold tracking-tight">
+              ORG NAME
+            </span>
+            <span className="truncate text-xs text-muted-foreground">
+              NA Desk
+            </span>
           </div>
         </div>
       </SidebarHeader>
 
       <SidebarContent>
-        <SidebarGroup>
+        <SidebarGroup className="px-3 py-4">
           <SidebarGroupContent>
-            <SidebarMenu>
+            <SidebarMenu className="gap-1.5">
               <SidebarMenuItem>
                 <SidebarMenuButton
                   tooltip="Dashboard"
                   isActive={pathname === "/dashboard"}
                   render={<Link to="/dashboard" />}
+                  className={navItemClass}
                 >
                   <LayoutDashboard />
                   <span>Dashboard</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  tooltip="Employe"
+                  isActive={pathname === "/employe"}
+                  render={<Link to="/employe" />}
+                  className={navItemClass}
+                >
+                  <Users />
+                  <span>Employe</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             </SidebarMenu>
@@ -96,7 +121,7 @@ export function AppSidebar(props) {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter>
+      <SidebarFooter className="px-3 py-3">
         <SidebarMenu>
           <SidebarMenuItem>
             <DropdownMenu>
@@ -106,16 +131,16 @@ export function AppSidebar(props) {
                     size="lg"
                     tooltip="Account"
                     aria-label="Open account menu"
-                    className="border border-primary/20 bg-primary/10 text-primary hover:bg-primary/15 data-open:bg-primary/15"
+                    className="h-14 gap-2.5 rounded-lg border border-sidebar-border bg-background px-2.5 text-foreground shadow-sm"
                   >
-                    <Avatar className="size-8 rounded-lg">
+                    <Avatar className="size-8 shrink-0 rounded-lg">
                       <AvatarFallback className="rounded-lg bg-primary text-xs font-semibold text-primary-foreground">
                         {initials}
                       </AvatarFallback>
                     </Avatar>
                     <div className="grid min-w-0 flex-1 text-left text-xs leading-tight group-data-[collapsible=icon]:hidden">
                       <span className="truncate font-semibold">{displayName}</span>
-                      <span className="truncate text-primary/70">{email}</span>
+                      <span className="truncate text-foreground/70">{email}</span>
                     </div>
                     <ChevronsUpDown className="ml-auto size-4 shrink-0 opacity-70 group-data-[collapsible=icon]:hidden" />
                   </SidebarMenuButton>
@@ -124,8 +149,8 @@ export function AppSidebar(props) {
               <DropdownMenuContent
                 side="right"
                 align="start"
-                sideOffset={8}
-                className="min-w-56"
+                sideOffset={31}
+                className="min-w-56 border border-sidebar-border"
               >
                 <DropdownMenuGroup>
                   <DropdownMenuLabel className="p-0 font-normal">
@@ -147,6 +172,10 @@ export function AppSidebar(props) {
                   </DropdownMenuLabel>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleOpenPdWork}>
+                  <ExternalLink />
+                  PD Work
+                </DropdownMenuItem>
                 <DropdownMenuItem onClick={handleSignOut}>
                   <LogOut />
                   Log out

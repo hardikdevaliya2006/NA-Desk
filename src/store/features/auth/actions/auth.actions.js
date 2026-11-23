@@ -20,7 +20,7 @@ const loginUser = createAsyncThunk(
       } = await supabase.auth.getUser();
 
       if (!user) {
-        return null;
+        return rejectWithValue("Could not retrieve the signed-in user");
       }
       return data;
     } catch (error) {

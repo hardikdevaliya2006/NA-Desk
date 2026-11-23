@@ -75,24 +75,14 @@
   --font-serif: "Bitter", ui-serif, Georgia, serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
   --radius: 0.5rem;
-  --shadow-2xs: 0 1px 2px 0 hsl(60 7.7% 15% / 0.03);
-  --shadow-xs: 0 1px 2px 0 hsl(60 7.7% 15% / 0.04);
-  --shadow-sm:
-    0 1px 2px 0 hsl(60 7.7% 15% / 0.05),
-    0 2px 6px -1px hsl(60 7.7% 15% / 0.04);
-  --shadow:
-    0 1px 2px 0 hsl(60 7.7% 15% / 0.05),
-    0 4px 12px -2px hsl(60 7.7% 15% / 0.05);
-  --shadow-md:
-    0 2px 4px 0 hsl(60 7.7% 15% / 0.05),
-    0 6px 16px -4px hsl(60 7.7% 15% / 0.06);
-  --shadow-lg:
-    0 4px 8px 0 hsl(60 7.7% 15% / 0.05),
-    0 10px 24px -6px hsl(60 7.7% 15% / 0.07);
-  --shadow-xl:
-    0 8px 16px 0 hsl(60 7.7% 15% / 0.05),
-    0 16px 32px -8px hsl(60 7.7% 15% / 0.08);
-  --shadow-2xl: 0 20px 48px -12px hsl(60 7.7% 15% / 0.14);
+  --shadow-2xs: none;
+  --shadow-xs: none;
+  --shadow-sm: none;
+  --shadow: none;
+  --shadow-md: none;
+  --shadow-lg: none;
+  --shadow-xl: none;
+  --shadow-2xl: none;
   --tracking-normal: 0em;
 }
 
@@ -143,24 +133,14 @@
   --font-serif: "Bitter", ui-serif, Georgia, serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
   --radius: 0.5rem;
-  --shadow-2xs: 0 1px 2px 0 hsl(0 0% 0% / 0.2);
-  --shadow-xs: 0 1px 2px 0 hsl(0 0% 0% / 0.25);
-  --shadow-sm:
-    0 1px 2px 0 hsl(0 0% 0% / 0.3),
-    0 2px 6px -1px hsl(0 0% 0% / 0.25);
-  --shadow:
-    0 1px 2px 0 hsl(0 0% 0% / 0.3),
-    0 4px 12px -2px hsl(0 0% 0% / 0.3);
-  --shadow-md:
-    0 2px 4px 0 hsl(0 0% 0% / 0.35),
-    0 6px 16px -4px hsl(0 0% 0% / 0.35);
-  --shadow-lg:
-    0 4px 8px 0 hsl(0 0% 0% / 0.4),
-    0 10px 24px -6px hsl(0 0% 0% / 0.4);
-  --shadow-xl:
-    0 8px 16px 0 hsl(0 0% 0% / 0.45),
-    0 16px 32px -8px hsl(0 0% 0% / 0.45);
-  --shadow-2xl: 0 20px 48px -12px hsl(0 0% 0% / 0.6);
+  --shadow-2xs: none;
+  --shadow-xs: none;
+  --shadow-sm: none;
+  --shadow: none;
+  --shadow-md: none;
+  --shadow-lg: none;
+  --shadow-xl: none;
+  --shadow-2xl: none;
   --tracking-normal: 0em;
 }
 
@@ -228,6 +208,17 @@
 @layer base {
   * {
     @apply border-border outline-ring/50;
+  }
+  /* Flat UI: no box shadows anywhere, including third-party inline styles. */
+  *,
+  *::before,
+  *::after {
+    box-shadow: none !important;
+  }
+  /* Keep keyboard focus visible now that box-shadow based rings are suppressed. */
+  *:focus-visible {
+    outline: 2px solid var(--ring) !important;
+    outline-offset: 2px !important;
   }
   body {
     @apply bg-background text-foreground antialiased;
