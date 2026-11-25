@@ -209,13 +209,7 @@
   * {
     @apply border-border outline-ring/50;
   }
-  /* Flat UI: no box shadows anywhere, including third-party inline styles. */
-  *,
-  *::before,
-  *::after {
-    box-shadow: none !important;
-  }
-  /* Keep keyboard focus visible now that box-shadow based rings are suppressed. */
+  /* Keep keyboard focus clearly visible. */
   *:focus-visible {
     outline: 2px solid var(--ring) !important;
     outline-offset: 2px !important;
