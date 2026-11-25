@@ -235,6 +235,19 @@
   scrollbar-width: none;
 }
 
+.thin-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+.thin-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.thin-scrollbar::-webkit-scrollbar-thumb {
+  border-radius: 9999px;
+  background: var(--border);
+}
+
 html {
   min-height: 0 !important;
 }

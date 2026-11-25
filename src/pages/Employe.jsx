@@ -43,6 +43,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
+  SelectGroup,
 } from "@/components/ui/select";
 import { Spinner } from "@/components/ui/spinner";
 import {
@@ -78,15 +79,23 @@ const formatDate = (value) => {
 };
 
 const roleBadgeVariant = (role) =>
-  String(role ?? "").toLowerCase().includes("admin") ? "default" : "outline";
+  String(role ?? "")
+    .toLowerCase()
+    .includes("admin")
+    ? "default"
+    : "outline";
 
 const Employe = () => {
   const dispatch = useDispatch();
-  const { usersWithRole = [], status, role } = useSelector(
-    (state) => state.authentication ?? {},
-  );
+  const {
+    usersWithRole = [],
+    status,
+    role,
+  } = useSelector((state) => state.authentication ?? {});
 
-  const isAdmin = String(role ?? "").toLowerCase().includes("admin");
+  const isAdmin = String(role ?? "")
+    .toLowerCase()
+    .includes("admin");
   const isLoading = status === "loading";
 
   const [query, setQuery] = useState("");
@@ -112,7 +121,9 @@ const Employe = () => {
     if (!search) return usersWithRole;
     return usersWithRole.filter((employee) =>
       [employee.name, employee.email, employee.role].some((value) =>
-        String(value ?? "").toLowerCase().includes(search),
+        String(value ?? "")
+          .toLowerCase()
+          .includes(search),
       ),
     );
   }, [usersWithRole, query]);
@@ -137,8 +148,8 @@ const Employe = () => {
   };
 
   const handleFormChange = (event) => {
-    const { id, value } = event.target;
-    setForm((current) => ({ ...current, [id]: value }));
+    const { name, value } = event.target;
+    setForm((current) => ({ ...current, [name]: value }));
     setFormError("");
   };
 
@@ -230,21 +241,26 @@ const Employe = () => {
             )}
           </div>
 
-          <div className="overflow-hidden rounded-lg border">
+          <div className="overflow-x-auto rounded-lg border">
             <Table>
               <TableHeader className="bg-muted/60">
                 <TableRow>
-                  <TableHead>Employee</TableHead>
+                  <TableHead className="pl-2">Employee</TableHead>
                   <TableHead>Role</TableHead>
                   <TableHead>Password</TableHead>
                   <TableHead className="hidden sm:table-cell">Joined</TableHead>
-                  {isAdmin && <TableHead className="text-right">Actions</TableHead>}
+                  {isAdmin && (
+                    <TableHead className="pr-2 text-right">Actions</TableHead>
+                  )}
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {isLoading && employees.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={columnCount} className="h-32 text-center">
+                    <TableCell
+                      colSpan={columnCount}
+                      className="h-32 text-center"
+                    >
                       <div className="flex items-center justify-center gap-2 text-muted-foreground">
                         <Spinner />
                         Loading employees...
@@ -260,7 +276,9 @@ const Employe = () => {
                             <Users />
                           </EmptyMedia>
                           <EmptyTitle>
-                            {query ? "No matching employees" : "No employees yet"}
+                            {query
+                              ? "No matching employees"
+                              : "No employees yet"}
                           </EmptyTitle>
                           <EmptyDescription>
                             {query
@@ -291,7 +309,7 @@ const Employe = () => {
                 ) : (
                   employees.map((employee) => (
                     <TableRow key={employee.user_id ?? employee.id}>
-                      <TableCell>
+                      <TableCell className="pl-2">
                         <div className="flex items-center gap-3">
                           <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-muted text-xs font-semibold text-foreground">
                             {getInitials(employee.name, employee.email)}
@@ -323,7 +341,7 @@ const Employe = () => {
                         {formatDate(employee.created_at)}
                       </TableCell>
                       {isAdmin && (
-                        <TableCell>
+                        <TableCell className="pr-2">
                           <div className="flex items-center justify-end gap-1">
                             <Button
                               variant="ghost"
@@ -359,22 +377,29 @@ const Employe = () => {
       {/* Create / Edit employee */}
       <Dialog open={formOpen} onOpenChange={setFormOpen}>
         <DialogContent className="sm:max-w-md">
-          <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+          <form
+            onSubmit={handleSubmit}
+            autoComplete="off"
+            className="flex flex-col gap-5"
+          >
             <DialogHeader>
               <DialogTitle>
                 {editing ? "Edit employee" : "Add employee"}
               </DialogTitle>
             </DialogHeader>
 
+            {/* "chrome-off" is an unrecognised autocomplete token: browsers ignore it,
+                so the saved-address dropdown stops covering these fields. */}
             <FieldGroup>
               <Field>
                 <FieldLabel htmlFor="emp-name">Name</FieldLabel>
                 <Input
                   id="emp-name"
+                  name="name"
                   value={form.name}
                   onChange={handleFormChange}
                   placeholder="e.g. Jane Doe"
-                  autoComplete="name"
+                  autoComplete="chrome-off"
                   required
                 />
               </Field>
@@ -382,11 +407,12 @@ const Employe = () => {
                 <FieldLabel htmlFor="emp-email">Email</FieldLabel>
                 <Input
                   id="emp-email"
+                  name="email"
                   type="email"
                   value={form.email}
                   onChange={handleFormChange}
                   placeholder="jane@company.com"
-                  autoComplete="email"
+                  autoComplete="chrome-off"
                   required
                 />
               </Field>
@@ -402,6 +428,7 @@ const Employe = () => {
                 </FieldLabel>
                 <Input
                   id="emp-password"
+                  name="password"
                   type="password"
                   value={form.password}
                   onChange={handleFormChange}
@@ -418,22 +445,31 @@ const Employe = () => {
                     setForm((current) => ({ ...current, role: value }))
                   }
                 >
-                  <SelectTrigger id="emp-role" className="w-full">
+                  <SelectTrigger
+                    id="emp-role"
+                    className="w-full px-2.5 py-1 text-base md:text-sm"
+                  >
                     <SelectValue placeholder="Select a role" />
                   </SelectTrigger>
                   <SelectContent>
-                    {DEFAULT_ROLES.map((option) => (
-                      <SelectItem key={option} value={option} className="capitalize">
-                        {option}
-                      </SelectItem>
-                    ))}
+                    <SelectGroup>
+                      {DEFAULT_ROLES.map((option) => (
+                        <SelectItem
+                          key={option}
+                          value={option}
+                          className="capitalize"
+                        >
+                          {option}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
                   </SelectContent>
                 </Select>
               </Field>
               {formError && <FieldError>{formError}</FieldError>}
             </FieldGroup>
 
-            <DialogFooter>
+            <DialogFooter className="-mt-2">
               <Button
                 type="button"
                 variant="outline"

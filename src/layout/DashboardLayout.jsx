@@ -9,13 +9,19 @@ import { Separator } from "@/components/ui/separator";
 import { ModeToggle } from "@/components/theme/ModeToggle";
 import { ColorPicker } from "@/components/theme/ColorPicker";
 
+const PAGE_TITLES = {
+  "/na-desk/create": "New NA Entry",
+};
+
 const DashboardLayout = () => {
   const location = useLocation();
   const segments = location.pathname.split("/").filter(Boolean);
-  const pageTitle = (segments[segments.length - 1] ?? "").replaceAll("-", " ");
+  const pageTitle =
+    PAGE_TITLES[location.pathname] ??
+    (segments[segments.length - 1] ?? "").replaceAll("-", " ");
 
   return (
-    <SidebarProvider className="h-svh min-h-svh overflow-hidden bg-background md:p-3 p-0! pb-4!">
+    <SidebarProvider className="h-svh min-h-svh overflow-hidden bg-background p-0 pb-4 md:p-3 md:pb-3">
       <AppSidebar variant="inset" />
 
       <SidebarInset className="h-full min-h-0 overflow-hidden rounded-xl border bg-background md:peer-data-[variant=inset]:m-2">
@@ -33,7 +39,7 @@ const DashboardLayout = () => {
           </div>
         </header>
 
-        <main className="hide-scrollbar min-h-0 flex-1 overflow-y-auto p-2 sm:p-3 lg:p-4">
+        <main className="thin-scrollbar min-h-0 flex-1 overflow-y-auto p-2 sm:p-3 lg:p-4">
           <Outlet />
         </main>
       </SidebarInset>

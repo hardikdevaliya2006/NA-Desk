@@ -3,9 +3,12 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   ChevronsUpDown,
   ExternalLink,
+  FileChartColumn,
   LayoutDashboard,
   LayoutGrid,
   LogOut,
+  NotebookTabs,
+  UserRound,
   Users,
 } from "lucide-react";
 
@@ -76,7 +79,7 @@ export function AppSidebar(props) {
     <Sidebar {...props}>
       <SidebarHeader className="gap-0 px-3 py-4">
         <div className="flex items-center gap-2.5">
-          <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-sm">
+          <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground">
             <LayoutGrid className="size-[18px]" />
           </div>
           <div className="grid min-w-0 flex-1 leading-tight">
@@ -107,13 +110,46 @@ export function AppSidebar(props) {
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton
-                  tooltip="Employe"
+                  tooltip="NA Desk"
+                  isActive={pathname === "/na-desk" || pathname.startsWith("/na-desk/")}
+                  render={<Link to="/na-desk" />}
+                  className={navItemClass}
+                >
+                  <NotebookTabs />
+                  <span>NA Desk</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  tooltip="Customer"
+                  isActive={pathname === "/customer"}
+                  render={<Link to="/customer" />}
+                  className={navItemClass}
+                >
+                  <UserRound />
+                  <span>Customer</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  tooltip="Reports"
+                  isActive={pathname === "/report"}
+                  render={<Link to="/report" />}
+                  className={navItemClass}
+                >
+                  <FileChartColumn />
+                  <span>Reports</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  tooltip="Employee"
                   isActive={pathname === "/employe"}
                   render={<Link to="/employe" />}
                   className={navItemClass}
                 >
                   <Users />
-                  <span>Employe</span>
+                  <span>Employee</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             </SidebarMenu>
@@ -131,7 +167,7 @@ export function AppSidebar(props) {
                     size="lg"
                     tooltip="Account"
                     aria-label="Open account menu"
-                    className="h-14 gap-2.5 rounded-lg border border-sidebar-border bg-background px-2.5 text-foreground shadow-sm"
+                    className="h-14 gap-2.5 rounded-lg border border-sidebar-border bg-background px-2.5 text-foreground"
                   >
                     <Avatar className="size-8 shrink-0 rounded-lg">
                       <AvatarFallback className="rounded-lg bg-primary text-xs font-semibold text-primary-foreground">
@@ -149,8 +185,8 @@ export function AppSidebar(props) {
               <DropdownMenuContent
                 side="right"
                 align="start"
-                sideOffset={31}
-                className="min-w-56 border border-sidebar-border"
+                sideOffset={8}
+                className="min-w-56 max-w-[calc(100vw-2rem)] border border-sidebar-border"
               >
                 <DropdownMenuGroup>
                   <DropdownMenuLabel className="p-0 font-normal">
