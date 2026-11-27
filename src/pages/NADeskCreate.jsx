@@ -3,6 +3,8 @@ import { FileText, LayoutGrid, Receipt, Ruler } from "lucide-react";
 import WaveBackground from "@/components/naDesk/WaveBackground";
 import { cn } from "@/lib/utils";
 
+const WAVE_BAND_CLASS = "h-12 md:h-14";
+
 const PHASES = [
   {
     number: "01",
@@ -36,8 +38,8 @@ const PHASES = [
 
 const NADeskCreate = () => {
   return (
-    <div className="flex h-full w-full flex-col">
-      <div className="grid min-h-0 w-full flex-1 grid-cols-1 grid-rows-4 gap-2 sm:gap-3 md:grid-cols-2 md:grid-rows-2 md:gap-4">
+    <div className="flex h-full w-full flex-col pb-6 md:pb-0">
+      <div className="grid min-h-0 w-full flex-1 grid-cols-1 grid-rows-[repeat(4,minmax(10rem,1fr))] gap-1.5 sm:grid-rows-[repeat(4,minmax(14rem,1fr))] sm:gap-2 md:grid-cols-2 md:grid-rows-[repeat(2,minmax(16rem,1fr))]">
         {PHASES.map((phase) => {
           const Icon = phase.icon;
 
@@ -52,13 +54,21 @@ const NADeskCreate = () => {
                 phase.bodyClass,
               )}
             >
-              <WaveBackground variant={phase.wave} className="h-[38%] opacity-95 sm:h-[22%]" />
+              <WaveBackground variant={phase.wave} className={cn("opacity-95", WAVE_BAND_CLASS)} />
               <span
                 aria-hidden="true"
-                className="pointer-events-none absolute inset-x-0 top-0 h-[38%] bg-gradient-to-t from-black/20 to-transparent sm:h-[22%]"
+                className={cn(
+                  "pointer-events-none absolute inset-x-0 top-0 bg-gradient-to-t from-black/20 to-transparent",
+                  WAVE_BAND_CLASS,
+                )}
               />
 
-              <div className="relative -translate-x-1 -translate-y-2 flex items-center gap-2">
+              <div
+                className={cn(
+                  "absolute inset-x-0 top-0 z-10 flex items-center gap-2 px-3 sm:px-5",
+                  WAVE_BAND_CLASS,
+                )}
+              >
                 <span className="flex size-6 shrink-0 items-center justify-center rounded-md bg-white/25 text-white ring-1 ring-white/40 backdrop-blur-sm sm:size-8 sm:rounded-lg">
                   <Icon className="size-3.5 sm:size-4" />
                 </span>
